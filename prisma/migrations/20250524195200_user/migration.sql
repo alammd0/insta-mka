@@ -1,11 +1,11 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
+    "name" TEXT,
     "phone" TEXT,
     "password" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
+    "username" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
