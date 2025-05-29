@@ -1,5 +1,6 @@
 import { setLoading, setToken, setUser } from "@/app/lib/slices/authSlice";
 import { apiconnecter } from "../apiconnecter";
+import { AppDispatch } from "@/app/lib/store";
 
 interface authFormData {
   email: string;
@@ -9,23 +10,24 @@ interface authFormData {
   username: string;
 }
 
-export const signup = async ({
-  email,
-  password,
-  name,
-  phone,
-  username,
-}: authFormData) => {
+export const signup = async (
+  { email, password, name, phone, username }: authFormData,
+  dispatch: AppDispatch
+) => {
   try {
     setLoading(true);
 
-    const response = await apiconnecter("POST", "/signup", {
-      email,
-      password,
-      name,
-      phone,
-      username,
-    });
+    const response = await apiconnecter(
+      "POST",
+      "/auth/signup",
+      JSON.stringify({
+        email,
+        password,
+        name,
+        phone,
+        username,
+      })
+    );
 
     console.log("Signup Response Inside API:", response);
 
@@ -33,8 +35,9 @@ export const signup = async ({
       throw new Error("No response from server");
     }
 
-    setUser(response.user);
-    setToken(response.token);
+    dispatch(setUser(response.user));
+    dispatch(setToken(response.token));
+
     setLoading(false);
 
     return response;
@@ -45,28 +48,38 @@ export const signup = async ({
   }
 };
 
-export const signin = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
+export const signin = async (
+  {
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  },
+  dispatch: AppDispatch
+) => {
   try {
     setLoading(true);
 
-    const response = await apiconnecter("POST", "/login", {
-      email,
-      password,
-    });
+    const response = await apiconnecter(
+      "POST",
+      "/auth/login",
+      JSON.stringify({ email, password })
+    );
 
     console.log("Login Response Inside API:", response);
+
+    console.log(response.token);
+    console.log(response.user);
+
     if (response.error) {
       throw new Error(response.error);
     }
 
-    setUser(response.user);
-    setToken(response.token);
+    dispatch(setUser(response.user));
+
+    dispatch(setToken(response.token));
+
     setLoading(false);
 
     return response;
@@ -74,5 +87,29 @@ export const signin = async ({
     console.error("Error during login:", error);
     setLoading(false);
     throw error;
+  }
+};
+
+export const getuser = async ({
+  token,
+  username,
+}: {
+  token: string;
+  username: string;
+}) => {
+  try {
+    const response = await apiconnecter(
+      "GET",
+      `/user/${username}`,
+      JSON.stringify({
+        token,
+      })
+    );
+
+    console.log("Full Details inside : ", response);
+
+    return response;
+  } catch (err) {
+    console.log(err);
   }
 };

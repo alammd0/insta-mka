@@ -7,21 +7,24 @@ export const instance = axios.create({
 export const apiconnecter = async (
   method: string,
   url: string,
-  data?: any,
-  headers: any = {}
+  data?: string,
+  headers?: () => object
 ) => {
+
   try {
     const response = await instance({
       method: method,
       url: url,
       data: data,
-      headers: headers,
+      headers: headers ? headers() : undefined,
     });
 
     console.log("API Response:", response.data);
 
     return response.data;
+
   } catch (err) {
+
     console.log("API Error:", err);
     if (axios.isAxiosError(err)) {
       // Handle Axios error

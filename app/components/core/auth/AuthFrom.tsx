@@ -4,6 +4,7 @@ import { signin, signup } from "@/app/service/opreation/authAPI";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 interface AuthFormProps {
   type: "login" | "signup";
@@ -19,6 +20,8 @@ export default function AuthForm({ type }: AuthFormProps) {
     username: "",
     phone: "",
   });
+
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +41,7 @@ export default function AuthForm({ type }: AuthFormProps) {
       console.log("Logging in with", userData);
       setLoading(true);
       const { email, password } = userData;
-      const res: any = await signin({ email, password });
+      const res = await signin({ email, password }, dispatch);
       setLoading(false);
       if (res?.error) {
         console.error("Login Error:", res.error);
@@ -51,7 +54,10 @@ export default function AuthForm({ type }: AuthFormProps) {
       setLoading(true);
       const { email, password, name, username, phone } = userData;
 
-      const res = await signup({ email, password, name, phone, username });
+      const res = await signup(
+        { email, password, name, phone, username },
+        dispatch
+      );
 
       setLoading(false);
 
