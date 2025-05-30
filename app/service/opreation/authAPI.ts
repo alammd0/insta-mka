@@ -98,18 +98,14 @@ export const getuser = async ({
   username: string;
 }) => {
   try {
-    const response = await apiconnecter(
-      "GET",
-      `/user/${username}`,
-      JSON.stringify({
-        token,
-      })
-    );
+    // Assuming the token should go in the Authorization header, not in the body
+    const response = await apiconnecter("GET", `/user/${username}`, undefined, {
+      Authorization: `Bearer ${token}`,
+    });
 
     console.log("Full Details inside : ", response);
-
     return response;
   } catch (err) {
-    console.log(err);
+    console.log("Error fetching user data: ", err);
   }
 };

@@ -7,12 +7,12 @@ import { useSelector } from "react-redux";
 
 export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.auth.user);
-  console.log("User : ", user);
+  // console.log("User : ", user);
 
   const username = user?.username;
 
   const token = useSelector((state: RootState) => state.auth.token);
-  console.log("token inside: ", token);
+  // console.log("token inside: ", token);
 
   const [userDetail, setUserDetails] = useState({});
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ export default function ProfilePage() {
     fetchuser();
   }, [token, username]);
 
-  console.log(userDetail);
+  // console.log(userDetail);
 
   if (loading) {
     <div>Loading....</div>;

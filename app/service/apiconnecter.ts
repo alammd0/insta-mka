@@ -8,23 +8,22 @@ export const apiconnecter = async (
   method: string,
   url: string,
   data?: string,
-  headers?: () => object
+  headers: Record<string, string> = {}
 ) => {
-
   try {
     const response = await instance({
       method: method,
       url: url,
       data: data,
-      headers: headers ? headers() : undefined,
+      headers: {
+        ...headers,
+      },
     });
 
     console.log("API Response:", response.data);
 
     return response.data;
-
   } catch (err) {
-
     console.log("API Error:", err);
     if (axios.isAxiosError(err)) {
       // Handle Axios error

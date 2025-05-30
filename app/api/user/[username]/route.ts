@@ -69,7 +69,6 @@ export async function GET(
   { params }: { params: { username: string } }
 ) {
   try {
-
     const { username } = await params;
 
     if (!username) {
@@ -108,6 +107,7 @@ export async function GET(
         message: "User Found",
         data: userDetails,
       },
+
       { status: 200 }
     );
   } catch (err) {

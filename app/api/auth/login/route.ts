@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import prisma from "@/app/utils/db";
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
   try {
@@ -44,12 +45,21 @@ export async function POST(req: Request) {
       {
         id: userExisting.id,
         email: userExisting.email,
-        name : userExisting.name,
+        name: userExisting.name,
         username: userExisting.username,
       },
       process.env.JWT_SECRET || "default",
       { expiresIn: "7d" }
     );
+
+    // genrate
+    const cookieStore = await cookies();
+    cookieStore.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    });
 
     const response = NextResponse.json({
       message: "Login successful",
@@ -63,9 +73,7 @@ export async function POST(req: Request) {
       token,
     });
 
-    response.headers.set("Set-Cookie", `token=${token}; HttpOnly; Path=/; Max-Age=604800;`);
     return response;
-
   } catch (error) {
     console.error("Error in login route:", error);
     return NextResponse.json(
