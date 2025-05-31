@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import prisma from "@/app/utils/db";
+import { PrismaClient } from "@/app/generated/prisma";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
+
+const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {

@@ -7,8 +7,8 @@ export const instance = axios.create({
 export const apiconnecter = async (
   method: string,
   url: string,
-  data?: string,
-  headers: Record<string, string> = {}
+  data?: string | FormData,
+  headers: Record<string, string> = {} 
 ) => {
   try {
     const response = await instance({

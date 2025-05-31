@@ -145,7 +145,8 @@ exports.Prisma.PostScalarFieldEnum = {
   title: 'title',
   description: 'description',
   image: 'image',
-  authorId: 'authorId',
+  location: 'location',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -154,7 +155,7 @@ exports.Prisma.CommentScalarFieldEnum = {
   id: 'id',
   comment: 'comment',
   postId: 'postId',
-  authorId: 'authorId',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

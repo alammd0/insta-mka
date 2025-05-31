@@ -15,7 +15,7 @@ export const sidebarItems = [
   {
     label: "Home",
     icon: FiHome,
-    path: "/",
+    path: "/home",
     active: true,
   },
   {
@@ -47,7 +47,7 @@ export const sidebarItems = [
   {
     label: "Create",
     icon: FiPlusCircle,
-    path: "/create",
+    path: "/create-post",
   },
   {
     label: "Profile",

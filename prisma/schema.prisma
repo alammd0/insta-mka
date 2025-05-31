@@ -46,8 +46,9 @@ model Post {
   title       String
   description String?
   image       String?
-  authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
+  location    String?
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
   comments    Comment[]
   likes       Like[]
   createdAt   DateTime  @default(now())
@@ -59,8 +60,8 @@ model Comment {
   comment   String
   postId    String
   post      Post     @relation(fields: [postId], references: [id])
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -82,5 +83,5 @@ model Follow {
   followingId String
   createdAt   DateTime @default(now())
 
-  @@unique([followerId, followingId]) 
+  @@unique([followerId, followingId])
 }
