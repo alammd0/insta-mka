@@ -24,7 +24,7 @@ export const createPost = async ({
 
     const response = await apiconnecter(
       "POST",
-      "/create",
+      "/create-posts",
       formData 
     );
 

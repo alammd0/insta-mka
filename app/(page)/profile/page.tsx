@@ -69,7 +69,7 @@ export default function ProfilePage() {
             <div>
               {userDetail.profile === null ? (
                 <div className="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                  <span className="font-medium text-gray-600 dark:text-gray-300">
+                  <span className="font-medium text-gray-600 dark:text-gray-300 capitalize">
                     {userDetail.name}
                   </span>
                 </div>
