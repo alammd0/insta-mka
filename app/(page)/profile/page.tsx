@@ -8,6 +8,26 @@ import Link from "next/link";
 import Image from "next/image";
 import { IoMdGrid } from "react-icons/io";
 import { SlCamera } from "react-icons/sl";
+import ProfileModalComponents from "@/app/components/core/profile/ProfileModal";
+
+interface Profile {
+  avatar: string;
+  bio: string;
+}
+
+interface Post {
+  image: string;
+  // add other post properties if needed
+}
+
+interface UserDetail {
+  name?: string;
+  username?: string;
+  posts: Post[];
+  followers: [];
+  following: [];
+  profile: Profile;
+}
 
 export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -17,24 +37,18 @@ export default function ProfilePage() {
   const token = useSelector((state: RootState) => state.auth.token);
   // console.log("token inside: ", token);
 
-  interface UserDetail {
-    profile?: string;
-    name?: string;
-    username?: string;
-    posts: [];
-    followers: [];
-    following: [];
-  }
+  const [loading, setLoading] = useState(false);
+
+  const [profileModalOpen, SetProfileModalOpen] = useState(false);
 
   const [userDetail, setUserDetails] = useState<UserDetail>({
-    profile: "",
+    profile: { avatar: "", bio: "" },
     name: "",
     username: "",
     posts: [],
     followers: [],
     following: [],
   });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchuser = async () => {
@@ -56,16 +70,21 @@ export default function ProfilePage() {
     fetchuser();
   }, [token, username]);
 
-  console.log("User Details.... = ", userDetail);
+  function openModal() {
+    SetProfileModalOpen(true);
+  }
+
+  // console.log("User Details.... = ", userDetail);
+  // console.log(userDetail.posts);
 
   if (loading) {
     <div>loading....</div>;
   } else {
     return (
-      <div className="flex flex-col text-white items-center justify-center mx-auto py-14 px-4 gap-20">
-        <div className="flex text-white gap-20">
+      <div className="flex flex-col text-white items-center justify-center mx-auto py-14 px-4 pr-20 gap-20">
+        <div className="flex">
           {/* Profile Pic section */}
-          <div className="text-white text-center flex flex-col gap-3">
+          <div className="text-white flex flex-col gap-3 w-[50%]">
             <div>
               {userDetail.profile === null ? (
                 <div className="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
@@ -74,25 +93,34 @@ export default function ProfilePage() {
                   </span>
                 </div>
               ) : (
-                <div>
-                  <Image
-                    className="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
-                    src="/docs/images/people/profile-picture-5.jpg"
-                    alt="Bordered avatar"
-                    width={40}
-                    height={40}
-                  />
+                <div className="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                  <span className="font-medium text-gray-600 dark:text-gray-300 capitalize">
+                    <img
+                      src={userDetail.profile?.avatar}
+                      alt={userDetail.name}
+                    />
+                  </span>
                 </div>
               )}
             </div>
 
-            <div className="capitalize font-semibold text-xl">
-              {userDetail.name}
+            <div className="flex flex-col gap-1">
+              <h2 className="capitalize font-semibold text-xl">
+                {userDetail.name}
+              </h2>
+              <p className="w-[90%]">{userDetail.profile?.bio}</p>
             </div>
+
+            <button
+              onClick={openModal}
+              className="bg-[#262626] px-3 py-1 rounded-md hover:bg-[#161616] transition-all duration-200 flex w-fit text-[14px] font-extralight"
+            >
+              Change Profile Pic & Bio
+            </button>
           </div>
 
           {/* follower and following, Edit and so on Section */}
-          <div className="flex flex-col gap-6 pt-4">
+          <div className="flex flex-col gap-6 pt-4 w-[50%]">
             <div className="flex items-center gap-8">
               <p className=" text-xl font-normal lowercase">
                 {userDetail.username}
@@ -145,22 +173,44 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="flex gap-3 flex-col items-center justify-center">
-                  <h2 className="text-3xl font-bold capitalize">Share Photos</h2>
+                  <h2 className="text-3xl font-bold capitalize">
+                    Share Photos
+                  </h2>
                   <p className="text-[16px] font-thin">
                     When you share photos, they will appear on your profile.
                   </p>
-                  <Link href="some" className="text-[14px]  text-[#006FF6] font-normal hover:text-white">Share your first photo</Link>
+                  <Link
+                    href="some"
+                    className="text-[14px]  text-[#006FF6] font-normal hover:text-white"
+                  >
+                    Share your first photo
+                  </Link>
                 </div>
               </div>
             ) : (
-              <div>
-                {
-                  // ADD:TODO
-                }
+              <div className="flex flex-wrap gap-5">
+                {userDetail.posts.map((image, index) => (
+                  <div
+                    key={index}
+                    className="h-[400px] w-[340px] border-2 rounded-sm hover:scale-105 transition-all duration-100"
+                  >
+                    <img
+                      src={image.image}
+                      className="h-[100%] w-[100%] rounded-sm"
+                      alt="no Image"
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </div>
         </div>
+
+        {profileModalOpen && (
+          <div>
+            <ProfileModalComponents></ProfileModalComponents>
+          </div>
+        )}
       </div>
     );
   }

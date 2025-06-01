@@ -15,6 +15,12 @@ export async function GET() {
         likes: true,
         comments: true,
         createdAt: true,
+        user: {
+          select : {
+            name : true,
+            profile : true
+          }
+        }
       },
     });
 
@@ -27,6 +33,7 @@ export async function GET() {
         status: 200,
       }
     );
+    
   } catch (err) {
     console.log(err);
     return NextResponse.json(

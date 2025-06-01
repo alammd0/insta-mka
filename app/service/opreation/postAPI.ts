@@ -15,20 +15,15 @@ export const createPost = async ({
   image,
 }: formData) => {
   try {
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
     formData.append("location", location);
     formData.append("image", image);
 
-    const response = await apiconnecter(
-      "POST",
-      "/create-posts",
-      formData 
-    );
+    const response = await apiconnecter("POST", "/create-posts", formData);
 
-    console.log("CreatePost Response:", response);
+    // console.log("CreatePost Response:", response);
 
     if (!response) {
       throw new Error("No response from server");
@@ -37,5 +32,20 @@ export const createPost = async ({
     return response;
   } catch (err) {
     console.log("Error creating post:", err);
+  }
+};
+
+export const getPost = async () => {
+  try {
+    const response = await apiconnecter("GET", "/get-posts");
+
+    if (!response || !response.data) {
+      throw new Error("No Post Data Found...");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(err);
+    throw new Error("find post error....");
   }
 };
