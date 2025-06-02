@@ -86,7 +86,7 @@ export default function ProfilePage() {
   } else {
     return (
       <div className="flex flex-col text-white items-center justify-center mx-auto py-14 px-4 pr-20 gap-20">
-        <div className="flex">
+        <div className="flex flex-row justify-center gap-10">
           {/* Profile Pic section */}
           <div className="text-white flex flex-col gap-3 w-[50%]">
             <div>
@@ -124,7 +124,7 @@ export default function ProfilePage() {
           </div>
 
           {/* follower and following, Edit and so on Section */}
-          <div className="flex flex-col gap-6 pt-4 w-[50%]">
+          <div className="flex flex-col gap-6 pt-4">
             <div className="flex items-center gap-8">
               <p className=" text-xl font-normal lowercase">
                 {userDetail.username}
@@ -132,9 +132,6 @@ export default function ProfilePage() {
               <div className="flex items-center gap-8">
                 <button className="bg-[#262626] px-3 py-1 rounded-md hover:bg-[#161616] transition-all duration-200">
                   <Link href="/profile/edit-profile">Edit Profile</Link>
-                </button>
-                <button className="bg-[#262626] px-3 py-1 rounded-md hover:bg-[#161616] transition-all duration-200">
-                  <Link href="/profile/view-archive">Veiw Archive</Link>
                 </button>
               </div>
             </div>
@@ -160,6 +157,7 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
+
         </div>
 
         {/* Post Wala Section */}

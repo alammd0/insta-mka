@@ -2,14 +2,13 @@ import Maincontent from "@/app/components/core/home/Maincontent";
 
 export default function HomePage() {
   return (
-    <div className="bg-[#000000] min-h-screen  text-white">
-      <div className="flex justify-between pr-20 pt-8">
-        
-        <div className="w-1/2 mx-auto flex justify-center items-center pl-4">
+    <div className="bg-[#000000] min-h-screen  flex justify-center items-center text-white">
+      <div className="flex justify-center pr-20 pt-8 w-[100%] mx-auto gap-20">
+        <div className="w-1/2 mx-auto flex justify-center items-center">
           <Maincontent />
         </div>
 
-        <div className="w-1/2">
+        <div className="w-1/2 mx-auto flex flex-col pl-20">
           <h1 className="text-2xl font-bold text-center mt-10">
             Welcome to the Follow Side
           </h1>
@@ -17,7 +16,6 @@ export default function HomePage() {
             This is the main content area where you can add your content.
           </p>
         </div>
-
       </div>
     </div>
   );

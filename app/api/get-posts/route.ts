@@ -8,6 +8,7 @@ export async function GET() {
     // find all post in db
     const posts = await prisma.post.findMany({
       select: {
+        id : true,
         title: true,
         description: true,
         image: true,
