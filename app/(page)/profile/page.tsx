@@ -74,6 +74,10 @@ export default function ProfilePage() {
     SetProfileModalOpen(true);
   }
 
+  function onClose(){
+    SetProfileModalOpen(false);
+  }
+
   // console.log("User Details.... = ", userDetail);
   // console.log(userDetail.posts);
 
@@ -208,7 +212,7 @@ export default function ProfilePage() {
 
         {profileModalOpen && (
           <div>
-            <ProfileModalComponents></ProfileModalComponents>
+            <ProfileModalComponents onClose={onClose}></ProfileModalComponents>
           </div>
         )}
       </div>

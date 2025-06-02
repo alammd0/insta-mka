@@ -60,9 +60,29 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const updatedProfile = await prisma.profile.create({
-      data: { bio: bio, avatar: uploadPic, userId: user.id },
+    const existingProfile = await prisma.profile.findUnique({
+      where: { userId: user.id },
     });
+
+    let updatedProfile;
+
+    if (existingProfile) {
+      updatedProfile = await prisma.profile.update({
+        where: { userId: user.id },
+        data: {
+          bio: bio,
+          avatar: uploadPic,
+        },
+      });
+    } else {
+      updatedProfile = await prisma.profile.create({
+        data: {
+          userId: user.id,
+          bio: bio,
+          avatar: uploadPic,
+        },
+      });
+    }
 
     return NextResponse.json(
       {
