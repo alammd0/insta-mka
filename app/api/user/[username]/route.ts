@@ -86,6 +86,8 @@ export async function GET(
         id: true,
         name: true,
         username: true,
+        phone: true,
+        email: true,
         posts: true,
         followers: true,
         following: true,

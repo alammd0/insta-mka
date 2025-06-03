@@ -1,7 +1,23 @@
+"use client";
+
 import Link from "next/link";
 import { sidebarItems } from "../../data/sidebar_link";
+import { IoMenu } from "react-icons/io5";
+import { useState } from "react";
+import MoreModal from "../modals/MoreModal";
 
 export default function SideBar() {
+  const [moreModalOpen, setMoreModalOpen] = useState(false);
+
+  const openMoreModal = () => {
+    setMoreModalOpen(true);
+    console.log("More modal opened");
+  };
+
+  const closeMoreModal = () => {
+    setMoreModalOpen(false);
+  };
+
   return (
     <div>
       <div className="flex flex-col h-screen text-white gap-3">
@@ -9,7 +25,7 @@ export default function SideBar() {
           Insta mka
         </h2>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 px-2 py-3">
           <div className="flex flex-col gap-4">
             {sidebarItems.map((item, index) => (
               <Link
@@ -22,8 +38,26 @@ export default function SideBar() {
               </Link>
             ))}
           </div>
+
+          <div>
+            <button
+              onClick={openMoreModal}
+              className="flex items-center justify-center gap-2 px-3 py-2 text-lg cursor-pointer"
+            >
+              {" "}
+              <IoMenu /> More
+            </button>
+          </div>
         </div>
       </div>
+
+      {
+        moreModalOpen && ( 
+          <div>
+            <MoreModal onClose={closeMoreModal}></MoreModal>
+          </div>
+        )
+      }
     </div>
   );
 }

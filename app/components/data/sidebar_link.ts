@@ -53,11 +53,5 @@ export const sidebarItems = [
     label: "Profile",
     icon: FiUser,
     path: "/profile",
-  },
-  {
-    label: "More",
-    icon: FiMenu,
-    path: "/more",
-    isBottom: true,
-  },
+  }
 ];
