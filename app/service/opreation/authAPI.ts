@@ -10,6 +10,13 @@ interface authFormData {
   username: string;
 }
 
+interface updateUserData {
+  name?: string;
+  email?: string;
+  phone?: string;
+  username?: string;
+}
+
 export const signup = async (
   { email, password, name, phone, username }: authFormData,
   dispatch: AppDispatch
@@ -107,5 +114,31 @@ export const getuser = async ({
     return response;
   } catch (err) {
     console.log("Error fetching user data: ", err);
+  }
+};
+
+export const updateUser = async (
+  data: updateUserData,
+  dispatch: AppDispatch
+) => {
+  try {
+    const response = await apiconnecter(
+      "PUT",
+      "auth/update-user",
+      JSON.stringify(data)
+    );
+
+    console.log("Signup Response Inside API:", response);
+
+    if (!response) {
+      throw new Error("No response from server");
+    }
+
+    dispatch(setUser(response.user));
+
+    return response;
+  } catch (err) {
+    console.log("Error updating user data: ", err);
+    throw err;
   }
 };

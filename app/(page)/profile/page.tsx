@@ -5,10 +5,10 @@ import { getuser } from "@/app/service/opreation/authAPI";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import Image from "next/image";
 import { IoMdGrid } from "react-icons/io";
 import { SlCamera } from "react-icons/sl";
-import ProfileModalComponents from "@/app/components/core/profile/ProfileModal";
+import ProfileModalComponents from "@/app/components/core/modals/ProfileModal";
+import UserUpdateModal from "@/app/components/core/modals/UserUpdateModal";
 
 interface Profile {
   avatar: string;
@@ -31,13 +31,14 @@ interface UserDetail {
 
 export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.auth.user);
-
   const username = user?.username;
 
   const token = useSelector((state: RootState) => state.auth.token);
   // console.log("token inside: ", token);
 
   const [loading, setLoading] = useState(false);
+
+  const [userModalOpen, SetUserModalOpen] = useState(false);
 
   const [profileModalOpen, SetProfileModalOpen] = useState(false);
 
@@ -70,11 +71,19 @@ export default function ProfilePage() {
     fetchuser();
   }, [token, username]);
 
+  function profileOpenModal() {
+    SetUserModalOpen(true);
+  }
+
+  function profileCloseModal() {
+    SetUserModalOpen(false);
+  }
+
   function openModal() {
     SetProfileModalOpen(true);
   }
 
-  function onClose(){
+  function onClose() {
     SetProfileModalOpen(false);
   }
 
@@ -130,8 +139,11 @@ export default function ProfilePage() {
                 {userDetail.username}
               </p>
               <div className="flex items-center gap-8">
-                <button className="bg-[#262626] px-3 py-1 rounded-md hover:bg-[#161616] transition-all duration-200">
-                  <Link href="/profile/edit-profile">Edit Profile</Link>
+                <button
+                  onClick={profileOpenModal}
+                  className="bg-[#262626] px-3 py-1 rounded-md hover:bg-[#161616] transition-all duration-200"
+                >
+                  Edit Profile
                 </button>
               </div>
             </div>
@@ -157,7 +169,6 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
-
         </div>
 
         {/* Post Wala Section */}
@@ -211,6 +222,12 @@ export default function ProfilePage() {
         {profileModalOpen && (
           <div>
             <ProfileModalComponents onClose={onClose}></ProfileModalComponents>
+          </div>
+        )}
+
+        {userModalOpen && (
+          <div>
+            <UserUpdateModal onClose={profileCloseModal}></UserUpdateModal>
           </div>
         )}
       </div>
