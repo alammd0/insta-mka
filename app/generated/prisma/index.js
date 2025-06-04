@@ -182,7 +182,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\Projects\\insta-mka\\app\\generated\\prisma",
+      "value": "C:\\Users\\Khalid Alam\\OneDrive\\Desktop\\MyProject\\Projects\\insta-mka\\app\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -196,7 +196,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\Projects\\insta-mka\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Khalid Alam\\OneDrive\\Desktop\\MyProject\\Projects\\insta-mka\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
