@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/lib/store";
 import { createLike, deleteLike } from "@/app/service/opreation/likesAPI";
 import CreateCommentModal from "../modals/CommentModal";
+import { formatDate } from "@/app/utils/data";
 
 interface Profile {
   avatar: string;
@@ -36,6 +37,7 @@ interface post {
   name: string;
   description: string;
   comments: string;
+  createdAt : string
 }
 
 export default function Maincontent() {
@@ -146,6 +148,11 @@ export default function Maincontent() {
 
   console.log("post Details : ", postDetails);
 
+  const formatedPostData = postDetails.map( (date) => {
+    return formatDate(date.createdAt);
+  })
+
+
   return (
     <div className="flex flex-col gap-6 items-center justify-center">
       {postDetails.map((post, index) => (
@@ -165,8 +172,9 @@ export default function Maincontent() {
               </div>
             )}
 
-            <div className=" capitalize text-[16px] cursor-pointer">
-              {post.user.name}
+            <div className="capitalize text-[16px] cursor-pointer flex justify-between gap-20">
+              <p>{post.user.name}</p>
+              <p>{formatedPostData[0]}</p>
             </div>
           </div>
 

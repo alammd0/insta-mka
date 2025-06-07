@@ -12,7 +12,7 @@ export const createcomment = async ({ postId, comment }: commentData) => {
       "/create-comments",
       JSON.stringify({
         postId,
-        comment
+        comment,
       })
     );
 
@@ -21,9 +21,28 @@ export const createcomment = async ({ postId, comment }: commentData) => {
     }
 
     return res;
-
   } catch (err) {
     console.log(err);
     throw new Error("Error Create Comment....");
+  }
+};
+
+export const getallcomment = async ({ postId }: { postId : string}) => {
+  try {
+    const response = await apiconnecter(
+      "GET",
+      `/get-all-comments?postId=${postId}`
+    );
+
+    console.log("All comments Data here -> ", response.data);
+
+    if (response.data) {
+      return response.data;
+    } else {
+      throw new Error("Fetching Error here in fetching comments..");
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 };

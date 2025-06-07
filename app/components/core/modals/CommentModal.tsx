@@ -1,16 +1,31 @@
-import { createcomment } from "@/app/service/opreation/commentAPI";
-import { useState } from "react";
+import {
+  createcomment,
+  getallcomment,
+} from "@/app/service/opreation/commentAPI";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/app/utils/data";
 
 interface propsData {
   onclose: () => void;
   postId: string;
 }
 
+interface Comment {
+  user: {
+    name: string;
+    // add other user properties if needed
+  };
+  comment: string;
+  createdAt: string;
+}
+
 export default function CreateCommentModal({ onclose, postId }: propsData) {
   console.log(postId);
 
   const [comment, setComment] = useState("");
+
+  const [allComments, setAllComments] = useState<Comment[]>([]);
 
   const router = useRouter();
 
@@ -24,7 +39,6 @@ export default function CreateCommentModal({ onclose, postId }: propsData) {
     e.preventDefault();
 
     try {
-
       if (!postId || !comment) {
         throw new Error("Post ID and comment are required.");
       }
@@ -44,6 +58,32 @@ export default function CreateCommentModal({ onclose, postId }: propsData) {
     }
   };
 
+  //  get all comment in a single post
+  useEffect(() => {
+    const getcommets = async () => {
+      try {
+        const res = await getallcomment({ postId });
+
+        if (res) {
+          setAllComments(res);
+        } else {
+          console.log("Error Fetching comments");
+        }
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    };
+
+    getcommets();
+  }, [postId]);
+
+  console.log("All Are there Modal...", allComments);
+
+  const formattedDates = allComments.map((data) => {
+    return formatDate(data.createdAt);
+  });
+
   return (
     <div>
       <div
@@ -61,7 +101,26 @@ export default function CreateCommentModal({ onclose, postId }: propsData) {
           &times;
         </button>
 
+        {/* show all comment here */}
+
         <div>
+          <div>
+            {allComments.length > 0 && (
+              <div>
+                {allComments.map((comment, index) => (
+                  <div className="flex justify-between gap-2 bg-fuchsia-900 m-2 px-3 py-2 rounded-xl text-[14px]">
+                    <div>
+                      <h2 className="text-[16px] font-bold">{comment.user.name}</h2>
+                      <p>{comment.comment}</p>
+                    </div>
+
+                    <p className="text-[9px] font-bold">{formattedDates[0]}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           <form onSubmit={submithandle} className="flex flex-col gap-2">
             <div className="border-b-1 -pb-2 rounded-sm">
               <input
