@@ -9,7 +9,7 @@ export default function ProfileLayout({ children }: { children: ReactNode }) {
         <SideBar />
       </div>
 
-      <div className="pl-30 mx-auto flex justify-center items-center">
+      <div className="pl-30 mx-auto flex justify-center pt-14">
         {children}
       </div>
     </div>

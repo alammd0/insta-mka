@@ -98,19 +98,28 @@ export const signin = async (
 };
 
 export const getuser = async ({
-  token,
   username,
 }: {
-  token: string;
   username: string;
 }) => {
   try {
+
+    console.log("Fetching user data for username:", username);
+
     // Assuming the token should go in the Authorization header, not in the body
-    const response = await apiconnecter("GET", `/user/${username}`, undefined, {
-      Authorization: `Bearer ${token}`,
-    });
+    const response = await apiconnecter(
+      "GET",
+      `/users?username=${username}`,
+      undefined, // No body for GET request
+      {
+        "Content-Type": "application/json",
+        // Add any other headers you need, like Authorization if required
+      }
+    );
+
 
     console.log("Full Details inside : ", response);
+
     return response;
   } catch (err) {
     console.log("Error fetching user data: ", err);

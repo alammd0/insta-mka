@@ -33,9 +33,6 @@ export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.auth.user);
   const username = user?.username;
 
-  const token = useSelector((state: RootState) => state.auth.token);
-  // console.log("token inside: ", token);
-
   const [loading, setLoading] = useState(false);
 
   const [userModalOpen, SetUserModalOpen] = useState(false);
@@ -55,8 +52,9 @@ export default function ProfilePage() {
     const fetchuser = async () => {
       try {
         setLoading(true);
-        if (token && username) {
-          const response = await getuser({ token, username });
+        if (username) {
+          console.log("Fetching user details for username:", username);
+          const response = await getuser({ username });
           console.log("inside Profile Page : ", response);
           setUserDetails(response.data);
         } else {
@@ -69,7 +67,7 @@ export default function ProfilePage() {
     };
 
     fetchuser();
-  }, [token, username]);
+  }, [username]);
 
   function profileOpenModal() {
     SetUserModalOpen(true);

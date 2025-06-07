@@ -1,86 +1,19 @@
-// import { NextRequest, NextResponse } from "next/server";
-// import { PrismaClient } from "@/app/generated/prisma";
-
-// const prisma = new PrismaClient();
-
-// export async function GET(req: NextRequest) {
-//   try {
-//     const { searchParams } = new URL(req.url);
-
-//     const username = searchParams.get("username");
-
-//     if (!username) {
-//       return NextResponse.json(
-//         {
-//           message: "User Not Found...",
-//         },
-//         { status: 404 }
-//       );
-//     }
-
-//     const userDetails = await prisma.user.findUnique({
-//       where: { username },
-//       select: {
-//         id: true,
-//         name: true,
-//         username: true,
-//         posts: true,
-//         followers: true,
-//         following: true,
-//         profile: true,
-//       },
-//     });
-
-//     if (!userDetails) {
-//       return NextResponse.json({
-//         message: "User not Found After call database...",
-//       });
-//     }
-
-//     return NextResponse.json(
-//       {
-//         message: "User Found",
-//         data: userDetails,
-//       },
-//       {
-//         status: 200,
-//       }
-//     );
-//   } catch (err) {
-//     console.log(err);
-//     return NextResponse.json(
-//       {
-//         message: "Error While Fetching User Data...",
-//       },
-//       {
-//         status: 503,
-//       }
-//     );
-//   }
-// }
-
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { PrismaClient } from "@/app/generated/prisma";
-
-const prisma = new PrismaClient();
 
 export async function GET(
   req: NextRequest,
   { params }: { params: { username: string } }
 ) {
+  const prisma = new PrismaClient();
   try {
-    const { username } = await params;
+    const username = await params.username;
 
     if (!username) {
-      return NextResponse.json(
-        {
-          message: "User Not Found...",
-        },
-        { status: 404 }
-      );
+      return new Response("Username required", { status: 400 });
     }
 
-    const userDetails = await prisma.user.findUnique({
+    const user = await prisma.user.findMany({
       where: { username },
       select: {
         id: true,
@@ -95,30 +28,15 @@ export async function GET(
       },
     });
 
-    if (!userDetails) {
-      return NextResponse.json(
-        {
-          message: "User not Found After DB call...",
-        },
-        { status: 404 }
-      );
+    if (!user || user.length === 0) {
+      return new Response("User not found", { status: 404 });
     }
 
-    return NextResponse.json(
-      {
-        message: "User Found",
-        data: userDetails,
-      },
-
-      { status: 200 }
-    );
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      {
-        message: "Error While Fetching User Data...",
-      },
-      { status: 503 }
-    );
+    return new Response(JSON.stringify({ data: user }), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
 }
