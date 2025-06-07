@@ -17,6 +17,11 @@ interface updateUserData {
   username?: string;
 }
 
+interface fetchUserData {
+  username: string;
+  exact?: boolean;
+}
+
 export const signup = async (
   { email, password, name, phone, username }: authFormData,
   dispatch: AppDispatch
@@ -97,34 +102,28 @@ export const signin = async (
   }
 };
 
-export const getuser = async ({
-  username,
-}: {
-  username: string;
-}) => {
-  try {
+// export const getuser = async ({
+//   username,
+// }: {
+//   username: string;
+// }) => {
+//   try {
 
-    console.log("Fetching user data for username:", username);
+//     console.log("Fetching user data for username:", username);
 
-    // Assuming the token should go in the Authorization header, not in the body
-    const response = await apiconnecter(
-      "GET",
-      `/users?username=${username}`,
-      undefined, // No body for GET request
-      {
-        "Content-Type": "application/json",
-        // Add any other headers you need, like Authorization if required
-      }
-    );
+//     const response = await apiconnecter(
+//       "GET",
+//       `/users?username=${username}`,
+//       undefined,
+//     );
 
+//     console.log("Full Details inside : ", response);
 
-    console.log("Full Details inside : ", response);
-
-    return response;
-  } catch (err) {
-    console.log("Error fetching user data: ", err);
-  }
-};
+//     return response;
+//   } catch (err) {
+//     console.log("Error fetching user data: ", err);
+//   }
+// };
 
 export const updateUser = async (
   data: updateUserData,
@@ -148,6 +147,29 @@ export const updateUser = async (
     return response;
   } catch (err) {
     console.log("Error updating user data: ", err);
+    throw err;
+  }
+};
+
+export const getuser = async ({ username, exact = false }: fetchUserData) => {
+  try {
+    console.log("Fetching user data for username:", username);
+    console.log("Exact match required: ", exact);
+
+    const response = await apiconnecter(
+      "GET",
+      `/users?username=${username}&exact=${exact}`,
+      undefined
+    );
+
+    console.log("Full Details inside : ", response);
+    if (!response) {
+      throw new Error("No response from server");
+    }
+
+    return response;
+  } catch (err) {
+    console.log("Error fetching user data: ", err);
     throw err;
   }
 };

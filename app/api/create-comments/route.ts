@@ -26,6 +26,8 @@ export const POST = async (req: NextRequest) => {
 
     const body = await req.json();
     const { postId, comment } = body;
+    console.log("Post iD Inside Server : ", postId);
+    console.log("Comment Inside server : ", comment);
 
     // create comments
     const response = await prisma.comment.create({
@@ -36,14 +38,26 @@ export const POST = async (req: NextRequest) => {
       },
     });
 
+    
     // return response
     return NextResponse.json(
       {
         mesaage: "create-comment",
+        data : response
       },
       {
         status: 200,
       }
     );
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      {
+        message: "Create Comment Any error",
+      },
+      {
+        status: 503,
+      }
+    );
+  }
 };

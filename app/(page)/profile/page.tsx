@@ -9,6 +9,7 @@ import { IoMdGrid } from "react-icons/io";
 import { SlCamera } from "react-icons/sl";
 import ProfileModalComponents from "@/app/components/core/modals/ProfileModal";
 import UserUpdateModal from "@/app/components/core/modals/UserUpdateModal";
+import Image from "next/image";
 
 interface Profile {
   avatar: string;
@@ -28,7 +29,6 @@ interface UserDetail {
   following: [];
   profile: Profile;
 }
-
 export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.auth.user);
   const username = user?.username;
@@ -54,7 +54,7 @@ export default function ProfilePage() {
         setLoading(true);
         if (username) {
           console.log("Fetching user details for username:", username);
-          const response = await getuser({ username });
+          const response = await getuser({ username, exact: true });
           console.log("inside Profile Page : ", response);
           setUserDetails(response.data);
         } else {
@@ -67,6 +67,7 @@ export default function ProfilePage() {
     };
 
     fetchuser();
+    
   }, [username]);
 
   function profileOpenModal() {
@@ -85,8 +86,8 @@ export default function ProfilePage() {
     SetProfileModalOpen(false);
   }
 
-  // console.log("User Details.... = ", userDetail);
-  // console.log(userDetail.posts);
+  console.log("User Details.... inside profile = ", userDetail);
+  console.log(userDetail.posts);
 
   if (loading) {
     <div>loading....</div>;
@@ -100,15 +101,19 @@ export default function ProfilePage() {
               {userDetail.profile === null ? (
                 <div className="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
                   <span className="font-medium text-gray-600 dark:text-gray-300 capitalize">
-                    {userDetail.name}
+                    {userDetail.name?.charAt(0).toUpperCase() || "U"}
                   </span>
                 </div>
               ) : (
                 <div className="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
                   <span className="font-medium text-gray-600 dark:text-gray-300 capitalize">
-                    <img
+                    <Image
                       src={userDetail.profile?.avatar}
-                      alt={userDetail.name}
+                      alt={
+                        userDetail.name
+                          ? `${userDetail.name}'s avatar`
+                          : "User avatar"
+                      }
                     />
                   </span>
                 </div>

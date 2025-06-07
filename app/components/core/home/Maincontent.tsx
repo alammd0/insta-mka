@@ -9,6 +9,7 @@ import { BsSend } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/lib/store";
 import { createLike, deleteLike } from "@/app/service/opreation/likesAPI";
+import CreateCommentModal from "../modals/CommentModal";
 
 interface Profile {
   avatar: string;
@@ -43,6 +44,18 @@ export default function Maincontent() {
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
 
   const user = useSelector((state: RootState) => state.auth.user);
+
+  const [CommentModal, SetCommentModal] = useState(false);
+  const [selectedPostId, SetSelectedPostId] = useState<string | null>(null);
+
+  const openCommentModals = (postId: string) => {
+    SetSelectedPostId(postId);
+    SetCommentModal(true);
+  };
+
+  const closeCommentModals = () => {
+    SetCommentModal(false);
+  };
 
   //  @ts-ignore
   console.log("user inside maincontent : ", user?.id);
@@ -180,7 +193,10 @@ export default function Maincontent() {
                 {likedPosts[post.id] ? <GoHeartFill /> : <FiHeart />}
               </div>
 
-              <div className="text-3xl font-semibold">
+              <div
+                className="text-3xl font-semibold cursor-pointer"
+                onClick={() => openCommentModals(post.id)}
+              >
                 <FaRegComment />
               </div>
 
@@ -208,6 +224,15 @@ export default function Maincontent() {
           </div>
         </div>
       ))}
+
+      {CommentModal && (
+        <div>
+          <CreateCommentModal
+            onclose={closeCommentModals}
+            postId={selectedPostId ?? ""}
+          ></CreateCommentModal>
+        </div>
+      )}
     </div>
   );
 }
