@@ -11,7 +11,10 @@ import { RootState } from "@/app/lib/store";
 import { createLike, deleteLike } from "@/app/service/opreation/likesAPI";
 import CreateCommentModal from "../modals/CommentModal";
 import { formatDate } from "@/app/utils/data";
-import { createfollow } from "@/app/service/opreation/followAPI";
+import {
+  createfollow,
+  fetchfollowing,
+} from "@/app/service/opreation/followAPI";
 
 interface Profile {
   avatar: string;
@@ -26,7 +29,6 @@ interface User {
 
 interface Like {
   userId: string;
-  // add other properties if needed
 }
 
 interface post {
@@ -152,7 +154,7 @@ export default function Maincontent() {
     try {
       const isFollowing = followedUsers[postUserId];
 
-       await createfollow({ followerId : userId , followingId: postUserId,  });
+      await createfollow({ followerId: userId, followingId: postUserId });
 
       // Optimistic UI update
       setFollowedUsers((prev) => ({
@@ -163,6 +165,30 @@ export default function Maincontent() {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    const fetchFollowedUsers = async () => {
+      try {
+        const res = await fetchfollowing();
+
+        if (res && Array.isArray(res.data)) {
+          // Convert array of users to a map
+          const followingMap = Object.fromEntries(
+            res.data.map((f: { followingId: string }) => [f.followingId, true])
+          );
+
+          setFollowedUsers(followingMap);
+
+        } else {
+          throw new Error("Error fetching followers");
+        }
+      } catch (err) {
+        console.error("Error fetching followed users:", err);
+      }
+    };
+
+    fetchFollowedUsers();
+  }, [userId]);
 
   return (
     <div className="flex flex-col gap-6 items-center justify-center">
@@ -228,10 +254,6 @@ export default function Maincontent() {
                   onClick={() => openCommentModals(post.id)}
                 >
                   <FaRegComment />
-                </div>
-
-                <div className="text-3xl font-semibold">
-                  <BsSend />
                 </div>
               </div>
 

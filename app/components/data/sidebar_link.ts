@@ -24,11 +24,6 @@ export const sidebarItems = [
     path: "/search",
   },
   {
-    label: "Explore",
-    icon: FiCompass,
-    path: "/explore",
-  },
-  {
     label: "Notifications",
     icon: FiHeart,
     path: "/notifications",

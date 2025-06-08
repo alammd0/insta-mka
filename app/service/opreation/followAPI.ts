@@ -24,3 +24,21 @@ export const createfollow = async ({
     throw err;
   }
 };
+
+
+export const fetchfollowing = async () => {
+    try{
+        const response = await apiconnecter("GET", "/follow/get-follow"); 
+
+        if(response){
+            return response
+        }
+        else{
+            throw new Error("Error while fetching following");
+        }
+    }
+    catch(err){
+        console.log(err);
+        throw err;
+    }
+}

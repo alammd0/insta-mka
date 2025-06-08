@@ -173,3 +173,19 @@ export const getuser = async ({ username, exact = false }: fetchUserData) => {
     throw err;
   }
 };
+
+export const getalluser = async () => {
+  try {
+    const response = await apiconnecter("GET", "/auth/getuser");
+
+    if (response) {
+      return response;
+    } else {
+      throw new Error("Here fetching all user details");
+    }
+    
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
