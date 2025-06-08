@@ -29,16 +29,6 @@ export const sidebarItems = [
     path: "/explore",
   },
   {
-    label: "Reels",
-    icon: FiFilm,
-    path: "/reels",
-  },
-  {
-    label: "Messages",
-    icon: FiMessageCircle,
-    path: "/messages",
-  },
-  {
     label: "Notifications",
     icon: FiHeart,
     path: "/notifications",

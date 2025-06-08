@@ -1,6 +1,7 @@
 import { getLoggedinUser } from "@/app/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@/app/generated/prisma";
+import { createNotification } from "@/app/lib/notifications";
 
 const prisma = new PrismaClient();
 
@@ -24,10 +25,19 @@ export const POST = async (req: NextRequest) => {
     }
 
     const body = await req.json();
-
     const { postId } = body;
 
     console.log("Pst Id inside likes", postId);
+
+    // find user details given post Id
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+      select: {
+        user: true,
+      },
+    });
 
     // check this liked by this
     const checkLikePost = await prisma.like.findFirst({
@@ -52,6 +62,30 @@ export const POST = async (req: NextRequest) => {
       data: { postId, userId: user.id },
     });
 
+    if (!post?.user?.id) {
+      return NextResponse.json(
+        {
+          message: "Post owner not found.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const notif = await createNotification({
+      type: "like",
+      message: "Like Your Posts",
+      senderId: user.id,
+      receiverId: post.user.id,
+      postId,
+      userId : user.id
+    });
+
+    console.log("Notification.. ", notif);
+
+
+
     return NextResponse.json(
       {
         message: "Like Create SuccessFully...",
@@ -61,7 +95,6 @@ export const POST = async (req: NextRequest) => {
         status: 200,
       }
     );
-    
   } catch (err) {
     console.log(err);
     return NextResponse.json(

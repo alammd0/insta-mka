@@ -11,6 +11,7 @@ import { RootState } from "@/app/lib/store";
 import { createLike, deleteLike } from "@/app/service/opreation/likesAPI";
 import CreateCommentModal from "../modals/CommentModal";
 import { formatDate } from "@/app/utils/data";
+import { createfollow } from "@/app/service/opreation/followAPI";
 
 interface Profile {
   avatar: string;
@@ -37,7 +38,7 @@ interface post {
   name: string;
   description: string;
   comments: string;
-  createdAt : string
+  createdAt: string;
 }
 
 export default function Maincontent() {
@@ -115,19 +116,6 @@ export default function Maincontent() {
         [postId]: !prevLikes[postId],
       }));
 
-      // setPostDetails((prev) =>
-      //   prev.map((post) =>
-      //     post.id === postId
-      //       ? {
-      //           ...post,
-      //           likes: post.likes.includes(userId)
-      //             ? post.likes.filter((id) => id !== userId) // remove like
-      //             : [...post.likes, userId], // add like
-      //         }
-      //       : post
-      //   )
-      // );
-
       setPostDetails((prev) =>
         prev.map((post) =>
           post.id === postId
@@ -148,10 +136,33 @@ export default function Maincontent() {
 
   console.log("post Details : ", postDetails);
 
-  const formatedPostData = postDetails.map( (date) => {
+  const formatedPostData = postDetails.map((date) => {
     return formatDate(date.createdAt);
-  })
+  });
 
+  const [followedUsers, setFollowedUsers] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  interface HandleFollowFn {
+    (postId: string): void;
+  }
+
+  const handleFollow = async (postUserId: string) => {
+    try {
+      const isFollowing = followedUsers[postUserId];
+
+       await createfollow({ followerId : userId , followingId: postUserId,  });
+
+      // Optimistic UI update
+      setFollowedUsers((prev) => ({
+        ...prev,
+        [postUserId]: !isFollowing,
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 items-center justify-center">
@@ -172,9 +183,19 @@ export default function Maincontent() {
               </div>
             )}
 
-            <div className="capitalize text-[16px] cursor-pointer flex justify-between gap-20">
+            <div className="capitalize text-[16px] flex gap-4">
               <p>{post.user.name}</p>
-              <p>{formatedPostData[0]}</p>
+
+              <button
+                onClick={() => handleFollow(post.user.id)}
+                className={`text-xl font-bold ${
+                  followedUsers[post.user.id]
+                    ? "text-green-600"
+                    : "text-blue-500"
+                }`}
+              >
+                {followedUsers[post.user.id] ? "Following" : "Follow"}
+              </button>
             </div>
           </div>
 
@@ -189,27 +210,33 @@ export default function Maincontent() {
             </div>
 
             {/* like, comment, share icons*/}
-            <div className="flex items-center gap-5">
-              <div
-                className={
-                  !likedPosts[post.id]
-                    ? "text-3xl font-semibold cursor-pointer"
-                    : "text-red-800 text-3xl font-semibold cursor-pointer"
-                }
-                onClick={() => handleLikedPost(post.id)}
-              >
-                {likedPosts[post.id] ? <GoHeartFill /> : <FiHeart />}
+            <div className="flex items-center justify-between">
+              <div className="flex gap-5 items-center justify-center">
+                <div
+                  className={
+                    !likedPosts[post.id]
+                      ? "text-3xl font-semibold cursor-pointer"
+                      : "text-red-800 text-3xl font-semibold cursor-pointer"
+                  }
+                  onClick={() => handleLikedPost(post.id)}
+                >
+                  {likedPosts[post.id] ? <GoHeartFill /> : <FiHeart />}
+                </div>
+
+                <div
+                  className="text-3xl font-semibold cursor-pointer"
+                  onClick={() => openCommentModals(post.id)}
+                >
+                  <FaRegComment />
+                </div>
+
+                <div className="text-3xl font-semibold">
+                  <BsSend />
+                </div>
               </div>
 
-              <div
-                className="text-3xl font-semibold cursor-pointer"
-                onClick={() => openCommentModals(post.id)}
-              >
-                <FaRegComment />
-              </div>
-
-              <div className="text-3xl font-semibold">
-                <BsSend />
+              <div>
+                <p className="text-[14px]">{formatedPostData[0]}</p>
               </div>
             </div>
 

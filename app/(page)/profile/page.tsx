@@ -9,7 +9,6 @@ import { IoMdGrid } from "react-icons/io";
 import { SlCamera } from "react-icons/sl";
 import ProfileModalComponents from "@/app/components/core/modals/ProfileModal";
 import UserUpdateModal from "@/app/components/core/modals/UserUpdateModal";
-import Image from "next/image";
 
 interface Profile {
   avatar: string;
@@ -107,7 +106,7 @@ export default function ProfilePage() {
               ) : (
                 <div className="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
                   <span className="font-medium text-gray-600 dark:text-gray-300 capitalize">
-                    <Image
+                    <img
                       src={userDetail.profile?.avatar}
                       alt={
                         userDetail.name
