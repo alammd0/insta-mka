@@ -63,7 +63,7 @@ export default function Maincontent() {
   };
 
   //  @ts-ignore
-  console.log("user inside maincontent : ", user?.id);
+  // console.log("user inside maincontent : ", user?.id);
 
   // @ts-ignore
   const userId = user?.id;
@@ -105,12 +105,12 @@ export default function Maincontent() {
       if (isLiked) {
         // Logic to unlike the post
         const response = await deleteLike(postId);
-        console.log("Unlike Response : ", response);
+        // console.log("Unlike Response : ", response);
       } else {
         // Logic to like the post
         const response = await createLike(postId);
 
-        console.log("Like Response : ", response);
+        // console.log("Like Response : ", response);
       }
 
       setLikedPosts((prevLikes) => ({
@@ -136,7 +136,7 @@ export default function Maincontent() {
     }
   };
 
-  console.log("post Details : ", postDetails);
+  // console.log("post Details : ", postDetails);
 
   const formatedPostData = postDetails.map((date) => {
     return formatDate(date.createdAt);
@@ -145,10 +145,6 @@ export default function Maincontent() {
   const [followedUsers, setFollowedUsers] = useState<{
     [key: string]: boolean;
   }>({});
-
-  interface HandleFollowFn {
-    (postId: string): void;
-  }
 
   const handleFollow = async (postUserId: string) => {
     try {

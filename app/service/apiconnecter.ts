@@ -20,7 +20,7 @@ export const apiconnecter = async (
       },
     });
 
-    console.log("API Response:", response.data);
+    // console.log("API Response:", response.data);
 
     return response.data;
   } catch (err) {

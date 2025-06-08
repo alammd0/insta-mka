@@ -1,6 +1,6 @@
-import { getLoggedinUser } from "@/app/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@/app/generated/prisma";
+import { getLoggedinUser } from "@/app/lib/auth";
 import { createNotification } from "@/app/lib/notifications";
 
 const prisma = new PrismaClient();
@@ -9,7 +9,7 @@ interface LoggedInUser {
   id: string;
 }
 
-export const POST = async (req: NextRequest) => {
+export const DELETE = async (req: NextRequest) => {
   try {
     const user = (await getLoggedinUser()) as LoggedInUser | null;
 
@@ -27,17 +27,7 @@ export const POST = async (req: NextRequest) => {
     const body = await req.json();
     const { postId } = body;
 
-    console.log("Pst Id inside likes", postId);
-
-    // find user details given post Id
-    const post = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-      select: {
-        user: true,
-      },
-    });
+    console.log("Pst Id inside unlike", postId);
 
     // check this liked by this
     const checkLikePost = await prisma.like.findFirst({
@@ -47,10 +37,10 @@ export const POST = async (req: NextRequest) => {
       },
     });
 
-    if (checkLikePost) {
+    if (!checkLikePost) {
       return NextResponse.json(
         {
-          message: "User Already like this Project..",
+          message: "User Not Like this Project..",
         },
         {
           status: 400,
@@ -58,37 +48,39 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const response = await prisma?.like.create({
-      data: { postId, userId: user.id },
+    // find post details
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
     });
 
-    if (!post?.user?.id) {
+    if (!post) {
       return NextResponse.json(
         {
-          message: "Post owner not found.",
+          message: "Post not found.",
         },
         {
-          status: 400,
+          status: 404,
         }
       );
     }
 
-    const notif = await createNotification({
+    const response = await prisma?.like.delete({
+      where: { id: checkLikePost.id },
+    });
+
+    await createNotification({
       type: "like",
-      message: "Like Your Posts",
+      message: "unlike Your Posts",
       senderId: user.id,
-      receiverId: post.user.id,
+      receiverId: post.userId,
       postId,
-      userId : user.id
     });
-
-    console.log("Notification.. ", notif);
-
-
 
     return NextResponse.json(
       {
-        message: "Like Create SuccessFully...",
+        message: "Like Deleted SuccessFully...",
         data: response,
       },
       {
@@ -96,12 +88,14 @@ export const POST = async (req: NextRequest) => {
       }
     );
   } catch (err) {
-    console.log(err);
+    console.log("Error Unliking Post : ", err);
     return NextResponse.json(
       {
-        message: "error likes the post..",
+        message: "Error Unliking Post",
       },
-      { status: 503 }
+      {
+        status: 500,
+      }
     );
   }
 };

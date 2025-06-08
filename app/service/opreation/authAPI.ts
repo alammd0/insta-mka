@@ -1,6 +1,7 @@
 import { setLoading, setToken, setUser } from "@/app/lib/slices/authSlice";
 import { apiconnecter } from "../apiconnecter";
 import { AppDispatch } from "@/app/lib/store";
+import { toast } from "react-toastify";
 
 interface authFormData {
   email: string;
@@ -41,20 +42,26 @@ export const signup = async (
       })
     );
 
-    console.log("Signup Response Inside API:", response);
+    // console.log("Signup Response Inside API:", response);
 
     if (!response) {
-      throw new Error("No response from server");
+      toast.error("No reponse gives")
     }
 
     dispatch(setUser(response.user));
     dispatch(setToken(response.token));
 
-    setLoading(false);
+    toast.success("Signup successful!"); 
 
+    setLoading(false);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error during signup:", error);
+
+    toast.error(
+      error?.response?.data?.message || "Signup failed. Please try again." 
+    );
+
     setLoading(false);
     throw error;
   }
@@ -79,19 +86,18 @@ export const signin = async (
       JSON.stringify({ email, password })
     );
 
-    console.log("Login Response Inside API:", response);
+    // console.log("Login Response Inside API:", response);
 
-    console.log(response.token);
-    console.log(response.user);
+    // console.log(response.token);
+    // console.log(response.user);
 
     if (response.error) {
-      throw new Error(response.error);
+      toast.error("Check Email & Password")
     }
 
     dispatch(setUser(response.user));
 
     dispatch(setToken(response.token));
-
     setLoading(false);
 
     return response;
@@ -183,7 +189,6 @@ export const getalluser = async () => {
     } else {
       throw new Error("Here fetching all user details");
     }
-    
   } catch (err) {
     console.log(err);
     throw err;

@@ -15,7 +15,7 @@ export const updateProfile = async ({ bio, avatar }: profileData) => {
 
     const response = await apiconnecter(
       "POST",
-      "profile/update-profile",
+      "/profile/update-profile",
       formData
     );
 

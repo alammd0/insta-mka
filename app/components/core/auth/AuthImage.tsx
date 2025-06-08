@@ -7,7 +7,7 @@ interface AuthFormProps {
 
 export default function AuthImage() {
   return (
-    <div className="h-[620px] w-[320px]">
+    <div className="h-[600px] w-[300px] hidden md:flex">
       <Image  className=" h-full w-full" src={screenshot} alt="hello" width={400} height={300} />
     </div>
   );

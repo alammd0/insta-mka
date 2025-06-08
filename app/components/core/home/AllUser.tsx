@@ -90,10 +90,10 @@ export default function Alluser() {
     fetchFollowedUsers();
   }, [currentUserId]);
 
-  console.log("user details -> ", userData);
+//   console.log("user details -> ", userData);
 
   return (
-    <div>
+    <div className=" hidden md:flex overflow-hidden">
       {userData.length === 0 ? (
         <div>No user Found</div>
       ) : (

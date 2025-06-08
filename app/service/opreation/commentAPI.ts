@@ -9,7 +9,7 @@ export const createcomment = async ({ postId, comment }: commentData) => {
   try {
     const res = await apiconnecter(
       "POST",
-      "/create-comments",
+      "/comment/create-comments",
       JSON.stringify({
         postId,
         comment,
@@ -31,7 +31,7 @@ export const getallcomment = async ({ postId }: { postId : string}) => {
   try {
     const response = await apiconnecter(
       "GET",
-      `/get-all-comments?postId=${postId}`
+      `/comment/get-all-comments?postId=${postId}`
     );
 
     console.log("All comments Data here -> ", response.data);

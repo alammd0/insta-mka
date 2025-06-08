@@ -4,7 +4,7 @@ import AuthImage from "@/app/components/core/auth/AuthImage";
 export default function signupComponent() {
   return (
     <div className="bg-[#000000] min-h-screen flex items-center justify-center text-white gap-10">
-      <div>
+      <div className=" hidden md:flex">
         <AuthImage/>
       </div>
       <div>

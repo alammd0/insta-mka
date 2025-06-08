@@ -21,7 +21,7 @@ export const createPost = async ({
     formData.append("location", location);
     formData.append("image", image);
 
-    const response = await apiconnecter("POST", "/create-posts", formData);
+    const response = await apiconnecter("POST", "/post/create-posts", formData);
 
     // console.log("CreatePost Response:", response);
 
@@ -37,7 +37,7 @@ export const createPost = async ({
 
 export const getPost = async () => {
   try {
-    const response = await apiconnecter("GET", "/get-posts");
+    const response = await apiconnecter("GET", "/post/get-posts");
 
     if (!response || !response.data) {
       throw new Error("No Post Data Found...");

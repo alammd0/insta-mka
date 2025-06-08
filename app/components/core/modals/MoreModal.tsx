@@ -2,22 +2,23 @@ import { updateProfile } from "@/app/service/opreation/updateProfile";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface ProfileModalProps {
   onClose: () => void;
 }
 
 export default function MoreModal({ onClose }: ProfileModalProps) {
+  const router = useRouter();
 
-    const router = useRouter();
-
-    function logoutHandle() {
-        console.log("Logout clicked");
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        router.push("/login");
-        onClose();
-    }
+  function logoutHandle() {
+    console.log("Logout clicked");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    router.push("/login");
+    toast.success("logout successfully...");
+    onClose();
+  }
 
   return (
     <>
@@ -38,9 +39,17 @@ export default function MoreModal({ onClose }: ProfileModalProps) {
         </button>
 
         <div className="flex flex-col items-center gap-4">
-          <button className="bg-fuchsia-900 px-4 py-2 rounded-xl text-white font-semibold" onClick={logoutHandle}>Log Out</button>
+          <button
+            className="bg-fuchsia-900 px-4 py-2 rounded-xl text-white font-semibold"
+            onClick={logoutHandle}
+          >
+            Log Out
+          </button>
 
-          <button onClick={onClose} className="bg-fuchsia-900 px-4 py-2 rounded-xl text-white font-semibold">
+          <button
+            onClick={onClose}
+            className="bg-fuchsia-900 px-4 py-2 rounded-xl text-white font-semibold"
+          >
             <Link href="/profile/settings/account">Settings</Link>
           </button>
         </div>

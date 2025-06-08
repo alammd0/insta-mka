@@ -1,6 +1,6 @@
+import { getLoggedinUser } from "@/app/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@/app/generated/prisma";
-import { getLoggedinUser } from "@/app/lib/auth";
 import { createNotification } from "@/app/lib/notifications";
 
 const prisma = new PrismaClient();
@@ -9,7 +9,7 @@ interface LoggedInUser {
   id: string;
 }
 
-export const DELETE = async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
     const user = (await getLoggedinUser()) as LoggedInUser | null;
 
@@ -27,7 +27,17 @@ export const DELETE = async (req: NextRequest) => {
     const body = await req.json();
     const { postId } = body;
 
-    console.log("Pst Id inside unlike", postId);
+    console.log("Pst Id inside likes", postId);
+
+    // find user details given post Id
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+      select: {
+        user: true,
+      },
+    });
 
     // check this liked by this
     const checkLikePost = await prisma.like.findFirst({
@@ -37,10 +47,10 @@ export const DELETE = async (req: NextRequest) => {
       },
     });
 
-    if (!checkLikePost) {
+    if (checkLikePost) {
       return NextResponse.json(
         {
-          message: "User Not Like this Project..",
+          message: "User Already like this Project..",
         },
         {
           status: 400,
@@ -48,29 +58,36 @@ export const DELETE = async (req: NextRequest) => {
       );
     }
 
-
-    // find post details 
-    const post = await prisma.post.findUnique({
-        where : {
-            id : postId
-        }
-    })
-
-    const response = await prisma?.like.delete({
-      where: { id: checkLikePost.id },
+    const response = await prisma?.like.create({
+      data: { postId, userId: user.id },
     });
 
-    await createNotification({
+    if (!post?.user?.id) {
+      return NextResponse.json(
+        {
+          message: "Post owner not found.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const notif = await createNotification({
       type: "like",
-      message: "unlike Your Posts",
+      message: "Like Your Posts",
       senderId: user.id,
       receiverId: post.user.id,
-      postId,
+      postId
     });
+
+    console.log("Notification.. ", notif);
+
+
 
     return NextResponse.json(
       {
-        message: "Like Deleted SuccessFully...",
+        message: "Like Create SuccessFully...",
         data: response,
       },
       {
@@ -78,14 +95,12 @@ export const DELETE = async (req: NextRequest) => {
       }
     );
   } catch (err) {
-    console.log("Error Unliking Post : ", err);
+    console.log(err);
     return NextResponse.json(
       {
-        message: "Error Unliking Post",
+        message: "error likes the post..",
       },
-      {
-        status: 500,
-      }
+      { status: 503 }
     );
   }
 };

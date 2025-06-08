@@ -4,7 +4,7 @@ export const createLike = async (postId: string) => {
   try {
     const response = await apiconnecter(
       "POST",
-      "/create-likes",
+      "/like/create-likes",
       JSON.stringify({ postId })
     );
 
@@ -23,7 +23,7 @@ export const deleteLike = async (postId: string) => {
   try {
     const response = await apiconnecter(
       "DELETE",
-      "/unlike-post",
+      "/like/unlike-post",
       JSON.stringify({ postId })
     );
 
