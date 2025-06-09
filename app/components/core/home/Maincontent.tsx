@@ -14,7 +14,9 @@ import { formatDate } from "@/app/utils/data";
 import {
   createfollow,
   fetchfollowing,
+  unfollow,
 } from "@/app/service/opreation/followAPI";
+import { toast } from "react-toastify";
 
 interface Profile {
   avatar: string;
@@ -125,7 +127,7 @@ export default function Maincontent() {
                 ...post,
                 likes: post.likes.includes(userId)
                   ? post.likes.filter((id) => id !== userId)
-                  : [...post.likes, userId], 
+                  : [...post.likes, userId],
               }
             : post
         )
@@ -150,7 +152,15 @@ export default function Maincontent() {
     try {
       const isFollowing = followedUsers[postUserId];
 
-      await createfollow({ followerId: userId, followingId: postUserId });
+      if (isFollowing) {
+        // Unfollow logic
+        await unfollow({ followerId: userId, followingId: postUserId });
+        toast.success("Unfollow sucess");
+      } else {
+        // Follow logic
+        await createfollow({ followerId: userId, followingId: postUserId });
+        toast.success("follow sucess");
+      }
 
       // Optimistic UI update
       setFollowedUsers((prev) => ({
@@ -159,6 +169,7 @@ export default function Maincontent() {
       }));
     } catch (err) {
       console.log(err);
+      toast.error("Error while unfollow and follow");
     }
   };
 
@@ -186,108 +197,105 @@ export default function Maincontent() {
   }, [userId]);
 
   return (
-      <div className="md:flex md:flex-col gap-6 md:justify-center">
-        {postDetails.map((post, index) => (
-          <div key={index} className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 cursor-pointer">
-              {post.user.profile === null ? (
-                <div className="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                  <span className="text-[8px] text-gray-600 dark:text-gray-300 capitalize">
-                    {post.user.name[0]}
-                  </span>
-                </div>
-              ) : (
-                <div className="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                  <span className="text-[8px] text-gray-600 dark:text-gray-300 capitalize">
-                    <img
-                      src={post.user.profile.avatar}
-                      alt={post.user.name[0]}
-                    />
-                  </span>
-                </div>
-              )}
+    <div className="md:flex md:flex-col gap-6 md:justify-center">
+      {postDetails.map((post, index) => (
+        <div key={index} className="flex flex-col gap-3">
+          <div className="flex items-center gap-2 cursor-pointer">
+            {post.user.profile === null ? (
+              <div className="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                <span className="text-[8px] text-gray-600 dark:text-gray-300 capitalize">
+                  {post.user.name[0]}
+                </span>
+              </div>
+            ) : (
+              <div className="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                <span className="text-[8px] text-gray-600 dark:text-gray-300 capitalize">
+                  <img src={post.user.profile.avatar} alt={post.user.name[0]} />
+                </span>
+              </div>
+            )}
 
-              <div className="capitalize text-[16px] flex gap-4">
-                <p>{post.user.name}</p>
+            <div className="capitalize text-[16px] flex gap-4">
+              <p>{post.user.name}</p>
 
-                <button
-                  onClick={() => handleFollow(post.user.id)}
-                  className={`text-xl font-bold ${
-                    followedUsers[post.user.id]
-                      ? "text-green-600"
-                      : "text-blue-500"
-                  }`}
+              <button
+                onClick={() => handleFollow(post.user.id)}
+                className={`text-xl font-bold ${
+                  followedUsers[post.user.id]
+                    ? "text-green-600"
+                    : "text-blue-500"
+                }`}
+              >
+                {followedUsers[post.user.id] ? "Following" : "Follow"}
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {/* Image section */}
+            <div className="h-[480px] w-[400px] border-1 border-b-blue-300 rounded-sm">
+              <img
+                src={post.image}
+                className="h-[100%] w-[100%] rounded-sm"
+                alt={post.title}
+              />
+            </div>
+
+            {/* like, comment, share icons*/}
+            <div className="flex items-center justify-between">
+              <div className="flex gap-5 items-center justify-center">
+                <div
+                  className={
+                    !likedPosts[post.id]
+                      ? "text-3xl font-semibold cursor-pointer"
+                      : "text-red-800 text-3xl font-semibold cursor-pointer"
+                  }
+                  onClick={() => handleLikedPost(post.id)}
                 >
-                  {followedUsers[post.user.id] ? "Following" : "Follow"}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              {/* Image section */}
-              <div className="h-[480px] w-[400px] border-1 border-b-blue-300 rounded-sm">
-                <img
-                  src={post.image}
-                  className="h-[100%] w-[100%] rounded-sm"
-                  alt={post.title}
-                />
-              </div>
-
-              {/* like, comment, share icons*/}
-              <div className="flex items-center justify-between">
-                <div className="flex gap-5 items-center justify-center">
-                  <div
-                    className={
-                      !likedPosts[post.id]
-                        ? "text-3xl font-semibold cursor-pointer"
-                        : "text-red-800 text-3xl font-semibold cursor-pointer"
-                    }
-                    onClick={() => handleLikedPost(post.id)}
-                  >
-                    {likedPosts[post.id] ? <GoHeartFill /> : <FiHeart />}
-                  </div>
-
-                  <div
-                    className="text-3xl font-semibold cursor-pointer"
-                    onClick={() => openCommentModals(post.id)}
-                  >
-                    <FaRegComment />
-                  </div>
+                  {likedPosts[post.id] ? <GoHeartFill /> : <FiHeart />}
                 </div>
 
-                <div>
-                  <p className="text-[14px]">{formatedPostData[0]}</p>
+                <div
+                  className="text-3xl font-semibold cursor-pointer"
+                  onClick={() => openCommentModals(post.id)}
+                >
+                  <FaRegComment />
                 </div>
               </div>
 
-              {/* count likes */}
-              <div className="text-[16px]">{post.likes.length} likes</div>
-
-              {/* title, description */}
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-2 items-center">
-                  <p className=" capitalize">{post.user.name}</p>
-                  <p className="text-[14px]">{post.title}</p>
-                </div>
-                <div className="text-[14px]">{post.description}</div>
-              </div>
-
-              {/* view all comment, comment input */}
               <div>
-                <button>Veiw all {post.comments.length} comments</button>
+                <p className="text-[14px]">{formatedPostData[0]}</p>
               </div>
             </div>
-          </div>
-        ))}
 
-        {CommentModal && (
-          <div>
-            <CreateCommentModal
-              onclose={closeCommentModals}
-              postId={selectedPostId ?? ""}
-            ></CreateCommentModal>
+            {/* count likes */}
+            <div className="text-[16px]">{post.likes.length} likes</div>
+
+            {/* title, description */}
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2 items-center">
+                <p className=" capitalize">{post.user.name}</p>
+                <p className="text-[14px]">{post.title}</p>
+              </div>
+              <div className="text-[14px]">{post.description}</div>
+            </div>
+
+            {/* view all comment, comment input */}
+            <div>
+              <button>Veiw all {post.comments.length} comments</button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      ))}
+
+      {CommentModal && (
+        <div>
+          <CreateCommentModal
+            onclose={closeCommentModals}
+            postId={selectedPostId ?? ""}
+          ></CreateCommentModal>
+        </div>
+      )}
+    </div>
   );
 }

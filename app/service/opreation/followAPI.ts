@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { apiconnecter } from "../apiconnecter";
 
 export const createfollow = async ({
@@ -25,20 +26,38 @@ export const createfollow = async ({
   }
 };
 
+export const unfollow = async ({
+  followerId,
+  followingId,
+}: {
+  followerId: string;
+  followingId: string;
+}) => {
+  try {
+    const response = await apiconnecter(
+      "DELETE",
+      "/follow/delete-follo",
+      JSON.stringify({ followerId, followingId })
+    );
+
+    toast.success("Unfollow Succes");
+  } catch (err) {
+    console.log("err", err);
+    toast.error("Unfollow Error");
+  }
+};
 
 export const fetchfollowing = async () => {
-    try{
-        const response = await apiconnecter("GET", "/follow/get-follow"); 
+  try {
+    const response = await apiconnecter("GET", "/follow/get-follow");
 
-        if(response){
-            return response
-        }
-        else{
-            throw new Error("Error while fetching following");
-        }
+    if (response) {
+      return response;
+    } else {
+      throw new Error("Error while fetching following");
     }
-    catch(err){
-        console.log(err);
-        throw err;
-    }
-}
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
