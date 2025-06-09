@@ -40,10 +40,11 @@ export const unfollow = async ({
       JSON.stringify({ followerId, followingId })
     );
 
-    toast.success("Unfollow Succes");
+    if (response) {
+      toast.success("Unfollow Succes");
+    }
   } catch (err) {
     console.log("err", err);
-    toast.error("Unfollow Error");
   }
 };
 

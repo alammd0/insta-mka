@@ -45,22 +45,20 @@ export const signup = async (
     // console.log("Signup Response Inside API:", response);
 
     if (!response) {
-      toast.error("No reponse gives")
+      toast.error("No reponse gives");
     }
 
     dispatch(setUser(response.user));
     dispatch(setToken(response.token));
 
-    toast.success("Signup successful!"); 
+    toast.success("Signup successful!");
 
     setLoading(false);
     return response;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error during signup:", error);
 
-    toast.error(
-      error?.response?.data?.message || "Signup failed. Please try again." 
-    );
+    toast.error("Signup failed. Please try again.");
 
     setLoading(false);
     throw error;
@@ -92,7 +90,7 @@ export const signin = async (
     // console.log(response.user);
 
     if (response.error) {
-      toast.error("Check Email & Password")
+      toast.error("Check Email & Password");
     }
 
     dispatch(setUser(response.user));
