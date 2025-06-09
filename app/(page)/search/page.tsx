@@ -79,7 +79,7 @@ export default function SearchComponent() {
   console.log("Users In select : ", selectedUser);
 
   return (
-    <div className="w-[100vh] max-w-md mx-auto p-6 rounded-lg shadow-lg">
+    <div className="w-[100vh] max-w-md mx-auto rounded-lg shadow-lg">
       <input
         type="text"
         value={query}
@@ -119,25 +119,6 @@ export default function SearchComponent() {
       )}
 
       {selectedUser && (
-        // <div className="mt-6 border p-4 rounded bg-white shadow">
-        //   <div className="flex items-center gap-4">
-        //     <img
-        //       src={selectedUser.profile?.avatar || "/default-avatar.png"}
-        //       alt={selectedUser.name}
-        //       className="w-16 h-16 rounded-full"
-        //     />
-        //     <div>
-        //       <h3 className="text-xl font-semibold">{selectedUser.name}</h3>
-        //       <p className="text-sm text-gray-600">@{selectedUser.username}</p>
-        //       <p className="text-sm text-gray-500">{selectedUser.email}</p>
-        //       {selectedUser.profile?.bio && (
-        //         <p className="text-sm mt-2 text-gray-700">
-        //           {selectedUser.profile.bio}
-        //         </p>
-        //       )}
-        //     </div>
-        //   </div>
-        // </div>
         <div>
           <SelectUserModal
             onClose={closeModalHandler}

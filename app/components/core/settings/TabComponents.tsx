@@ -14,26 +14,24 @@ export default function TabComponents() {
   const pathname = usePathname();
 
   return (
-
-      <div className=" w-[100vh] flex justify-between max-w-4xl p-4 gap-10 bg-[#262626] border-b-2 border-fuchsia-500 rounded-tr-2xl rounded-tl-2xl rounded-br-xl rounded-bl-xl">
-        {tabData.map((tab, index) => {
-          const isActive = pathname.startsWith(tab.path);
-
-          return (
-            <div key={index}>
-              <Link
-                href={tab.path}
-                className={`text-lg font-semibold transition-colors duration-200 ${
-                  isActive
-                    ? "text-fuchsia-500 underline"
-                    : "text-white hover:text-fuchsia-500"
-                }`}
-              >
-                {tab.label}
-              </Link>
-            </div>
-          );
-        })}
-      </div>
+    <div className="md:w-[100vh] flex md:flex-row flex-col top-0 justify-between max-w-4xl p-4 md:gap-10 gap-4 bg-[#262626] border-b-2 border-fuchsia-500 rounded-tr-2xl rounded-tl-2xl rounded-br-xl rounded-bl-xl">
+      {tabData.map((tab, index) => {
+        const isActive = pathname.startsWith(tab.path);
+        return (
+          <div key={index}>
+            <Link
+              href={tab.path}
+              className={`text-lg font-semibold transition-colors duration-200 ${
+                isActive
+                  ? "text-fuchsia-500 underline"
+                  : "text-white hover:text-fuchsia-500"
+              }`}
+            >
+              {tab.label}
+            </Link>
+          </div>
+        );
+      })}
+    </div>
   );
 }

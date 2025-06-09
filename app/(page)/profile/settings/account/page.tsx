@@ -5,7 +5,6 @@ import { RootState } from "@/app/lib/store";
 import { useEffect, useState } from "react";
 import { getuser } from "@/app/service/opreation/authAPI";
 import Link from "next/link";
-import Image from "next/image";
 
 interface Profile {
   avatar: string;
@@ -32,7 +31,7 @@ export default function AccountSettingsPage() {
   const username = user?.username;
 
   const token = useSelector((state: RootState) => state.auth.token);
-  console.log("token inside: ", token);
+  // console.log("token inside: ", token);
 
   const [userDetail, setUserDetails] = useState<userDetails>({
     profile: { avatar: "", bio: "" },
@@ -51,7 +50,7 @@ export default function AccountSettingsPage() {
       if (token && username) {
         try {
           const response = await getuser({ username, exact: true });
-          console.log("User Details: ", response);
+          // console.log("User Details: ", response);
 
           if (response) {
             setUserDetails(response.data);
@@ -67,10 +66,10 @@ export default function AccountSettingsPage() {
     fetchUserDetails();
   }, [token, username]);
 
-  console.log("User Details: ", userDetail);
+  // console.log("User Details: ", userDetail);
 
   return (
-    <div className="bg-[#2d2b2b] md:w-[65vh] rounded-xl flex flex-col pb-5 px-4 py-3">
+    <div className="bg-[#2d2b2b] md:w-[65vh] rounded-xl flex flex-col px-4 py-3">
       <div className="flex flex-col gap-5">
         {userDetail.profile === null ? (
           <div className="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
@@ -80,7 +79,7 @@ export default function AccountSettingsPage() {
           </div>
         ) : (
           <div className="flex justify-center items-center h-60 rounded-2xl overflow-hidden ">
-            <Image
+            <img
               src={userDetail.profile?.avatar}
               alt={
                 userDetail.name ? `${userDetail.name}'s avatar` : "User avatar"

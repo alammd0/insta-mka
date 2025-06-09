@@ -77,12 +77,12 @@ export default function CreatePost() {
   }
 
   return (
-    <div className="text-white pt-10">
+    <div className="text-white lg:pt-10 pb-10 mb-16">
       <div className="flex flex-col gap-5 border-1 border-dotted rounded-xl border-fuchsia-600 px-8 py-6">
         <h2 className="text-xl font-semibold">Create a Post </h2>
-        <div>
-          <form action={submitData} className="flex gap-8">
-            <div className=" max-w-[50%]">
+        <div className="w-full">
+          <form action={submitData} className="flex lg:flex-row flex-col gap-8 w-full">
+            <div className="lg:max-w-[50%]">
               <label className="block w-full border-2 border-dashed border-gray-500 rounded-lg p-6 text-center cursor-pointer bg-gray-800 text-white">
                 <input
                   type="file"

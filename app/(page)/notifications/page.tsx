@@ -42,11 +42,11 @@ export default function NotificationPage() {
 
   return (
     <div
-      className="bg-[#1E2939] w-[550px] text-white mb-4 px-2 py-4 rounded-xl border-1 border-fuchsia-600
+      className="bg-[#1E2939] md:w-[550px] w-[470px] text-white md:mb-4 px-2 py-4 rounded-xl border-1 border-fuchsia-600
      flex flex-col items-center"
     >
       <div className=" bg-fuchsia-400 w-full text-center py-2 rounded-xl">
-        <h2 className="text-xl font-semibold">Notifications</h2>
+        <h2 className="lg:text-xl text-[16px] font-semibold">Notifications</h2>
       </div>
 
       <div>
@@ -59,11 +59,11 @@ export default function NotificationPage() {
             {notification.map((data, index) => (
               <div className="flex justify-between gap-12 bg-[#2d2b2b] m-4 px-4 py-3 rounded-xl" key={index}>
                 <div>
-                  <h2 className="text-xl font-semibold">{data.sender.name}</h2>
-                  <p className="text-[14px] capitalize">{data.type}</p>
+                  <h2 className="md:text-xl text-[14px] font-semibold">{data.sender.name}</h2>
+                  <p className="md:text-[14px] text-[10px] capitalize">{data.type}</p>
                 </div>
 
-                <div className=" capitalize">{data.message}</div>
+                <div className="capitalize">{data.message}</div>
 
                 <div className="text-[13px] font-semibold text-gray-400">{formattedDates[0]}</div>
               </div>

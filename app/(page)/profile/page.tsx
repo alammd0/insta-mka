@@ -92,7 +92,7 @@ export default function ProfilePage() {
     <div>loading....</div>;
   } else {
     return (
-      <div className="flex flex-col text-white items-center justify-center mx-auto py-14 px-4 pr-20 gap-20">
+      <div className="flex flex-col w-full text-white items-center justify-center mx-auto py-14 px-4 gap-20">
         <div className="flex flex-row justify-center gap-10">
           {/* Profile Pic section */}
           <div className="text-white flex flex-col gap-3 w-[50%]">
@@ -174,7 +174,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Post Wala Section */}
-        <div className="border-t-1 flex flex-col gap-4">
+        <div className="border-t-1  flex flex-col gap-4 justify-center items-center">
           <div className="flex items-center gap-1 uppercase text-[16px] font-semibold pt-2">
             <IoMdGrid />
             <h2>Posts</h2>
