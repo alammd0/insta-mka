@@ -12,10 +12,12 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
+    ignores: ["**/generated/**"], // ⬅️ Add this
     rules: {
       "@typescript-eslint/no-this-alias": "off",
     },
   },
 ];
+
 
 export default eslintConfig;
